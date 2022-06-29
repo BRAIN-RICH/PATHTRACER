@@ -1,11 +1,22 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.10)
 #设置项目名称
-project(raytracer)
+project(raytracer VERSION 0.1)
 #添加子模块pybind11
 add_subdirectory(pybind11)
-#find_package(SDL2 REQUIRED)
+
+if(UNIX)
+    message("current platform: Linux ")
+    find_package(SDL2 REQUIRED)
+    message(STATUS ${SDL2_INCLUDE_DIRS})
+elseif(WIN32)
+    message("current platform: Windows ")
+    set(SDL2_INCLUDE_DIRS "include/sdl/include/SDL2")
+    set(SDL2_LIBRARIES "../SDL2")
+else()
+    message("current platform: unkonw ")
+endif()
+include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(include/tinytiff)
-include_directories(include/sdl/include/SDL2)
 include_directories(Source)
 find_package(OpenMP REQUIRED)
 
@@ -47,9 +58,6 @@ pybind11_add_module(raytracer
         Source/volume.h
         Source/vector_type.h 
         Source/enums.h)
-#LINK_LIBRARIES("../SDL2.dll")
-set(SDL2_LIBRARIES "../SDL2")
-#set(SDL2_LIBRARIES "/home/jack/sdl2/lib/libSDL2.so")
 target_link_libraries(raytracer PRIVATE
 		${SDL2_LIBRARIES}
 )
