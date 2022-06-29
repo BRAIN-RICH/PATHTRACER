@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10)
 project(raytracer VERSION 0.1)
 #添加子模块pybind11
 add_subdirectory(pybind11)
-
+set(CMAKE_CXX_STANDARD 17)
 if(UNIX)
     message("current platform: Linux ")
     find_package(SDL2 REQUIRED)
