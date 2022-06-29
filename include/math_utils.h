@@ -3,11 +3,10 @@
 
 #include <cmath>
 #include<limits>
-//#include<corecrt_math_defines.h>
+#include<corecrt_math_defines.h>
 namespace scg
 {
 
-# define M_PI		3.14159265358979323846
 const float EPS = 1e-6;
 //const float EPS = std::numeric_limits<float>::epsilon();//浮点数表示的最小值
 const float RAY_EPS = 1e-3;//光线最小值
