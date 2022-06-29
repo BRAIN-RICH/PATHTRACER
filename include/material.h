@@ -13,22 +13,22 @@
 namespace scg
 {
 
-//²ÄÖÊĞé»ùÀà
+//æè´¨è™šåŸºç±»
 class Material
 {
 public:
-    virtual Vec3f evaluate(ScatterEvent const& interaction) const = 0;//ÈçºÎ¼ÆËã
+    virtual Vec3f evaluate(ScatterEvent const& interaction) const = 0;//å¦‚ä½•è®¡ç®—
     virtual void sample(ScatterEvent &interaction, Sampler &sampler) const = 0;
-    virtual float pdf(ScatterEvent const& interaction) const = 0;//¸ÅÂÊÃÜ¶Èº¯Êı
+    virtual float pdf(ScatterEvent const& interaction) const = 0;//æ¦‚ç‡å¯†åº¦å‡½æ•°
 
-    virtual BSDFLobe getSupportedLobes(Vec2f const&) const = 0;//Ğı×ªÖ§³ÖµÄbsdfº¯Êı
-    virtual std::shared_ptr<Light> getLight(Vec2f const&) const//»ñÈ¡¹âÏß
+    virtual BSDFLobe getSupportedLobes(Vec2f const&) const = 0;//æ—‹è½¬æ”¯æŒçš„bsdfå‡½æ•°
+    virtual std::shared_ptr<Light> getLight(Vec2f const&) const//è·å–å…‰çº¿
     {
         return nullptr;
     }
 };
 
-//ÀÊ²®·´Éä¶¨ÂÉ£¬Âş·´Éä
+//æœ—ä¼¯åå°„å®šå¾‹ï¼Œæ¼«åå°„
 class Lambert : public Material
 {
 protected:
@@ -44,7 +44,7 @@ public:
     Lambert(std::shared_ptr<Texture> const& texture, std::shared_ptr<Light> const& light):
         texture(texture), light(light) {};
 
-	//¼ÆËã·½·¨
+	//è®¡ç®—æ–¹æ³•
     Vec3f evaluate(ScatterEvent const& interaction) const override
     {
         return texture->evaluate(interaction.uv) * std::abs(dot(interaction.normal, interaction.inputDir)) * (float)M_1_PI;
@@ -73,7 +73,7 @@ public:
 };
 
 
-//¾µÃæ·´Éä
+//é•œé¢åå°„
 class Mirror : public Material
 {
 protected:
@@ -106,7 +106,7 @@ public:
         return BSDFLobe::SpecularReflection;
     }
 };
-//¾µÃæ½éÖÊ
+//é•œé¢ä»‹è´¨
 class SpecularDielectric : public Material
 {
 protected:
@@ -171,7 +171,7 @@ public:
     }
 };
 
-//Âş·´Éä½éÖÊ
+//æ¼«åå°„ä»‹è´¨
 class DiffuseDielectric : public Material
 {
 protected:
@@ -237,7 +237,7 @@ public:
     }
 };
 
-//¸÷ÏòÍ¬ĞÔ
+//å„å‘åŒæ€§
 class Isotropic : public Material
 {
 protected:
@@ -271,7 +271,7 @@ public:
     }
 };
 
-//¹â»¬µÄ
+//å…‰æ»‘çš„
 class Glossy : public Material
 {
 public:
@@ -311,7 +311,7 @@ public:
 };
 
 
-//phong·´ÉäÄ£ĞÍ
+//phongåå°„æ¨¡å‹
 class Phong : public Material
 {
 public:

@@ -4,7 +4,7 @@
 #include "octree.h"
 #include "settings.h"
 
-#define VOLUME_SIZE 512//¶¨ÒåÌå»ı³ß´çÎª512
+#define VOLUME_SIZE 512//å®šä¹‰ä½“ç§¯å°ºå¯¸ä¸º512
 #define V_EPS 2
 
 namespace scg
@@ -13,14 +13,14 @@ namespace scg
 class Volume
 {
 public:
-	//³¤¿í¸ß¾ùÎª512£¿
+	//é•¿å®½é«˜å‡ä¸º512ï¼Ÿ
     int height = VOLUME_SIZE;
     int width = VOLUME_SIZE;
     int depth = VOLUME_SIZE;
 
     float data[VOLUME_SIZE][VOLUME_SIZE][VOLUME_SIZE];
 
-    Octree octree;//°Ë²æÊ÷
+    Octree octree;//å…«å‰æ ‘
 
     Volume(int height, int width, int depth);
 
@@ -45,7 +45,7 @@ public:
         float c110 = data[px + 1][py + 1][pz];
         float c111 = data[px + 1][py + 1][pz + 1];
 
-		//lerp(a,b,t)µÄÒâË¼¾ÍÊÇa+(b-a)*t
+		//lerp(a,b,t)çš„æ„æ€å°±æ˜¯a+(b-a)*t
         float c00 = lerp(c000, c100, dx);
         float c01 = lerp(c001, c101, dx);
         float c10 = lerp(c010, c110, dx);
@@ -59,7 +59,7 @@ public:
         return coef;
     }
 
-	//»ñÈ¡Ìİ¶È
+	//è·å–æ¢¯åº¦
     inline Vec3f getGradient(Vec3f const& pos, float eps) const
     {
         Vec3f deltaX(eps, 0, 0);
@@ -74,7 +74,7 @@ public:
 
     inline Vec3f getGradientNormalised(Vec3f const& pos, float eps) const
     {
-        return normalise(getGradient(pos, eps));//·µ»Ø¹éÒ»»¯Ìİ¶È
+        return normalise(getGradient(pos, eps));//è¿”å›å½’ä¸€åŒ–æ¢¯åº¦
     }
 };
 

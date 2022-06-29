@@ -16,8 +16,9 @@
 #include <memory>
 #include <omp.h>//openMP并行编程
 #include <string>
-
-
+#include <fstream>
+#include "json.hpp"
+namespace js = nlohmann;
 #define RES 650//定义分辨率
 #define SCREEN_WIDTH  RES
 #define SCREEN_HEIGHT RES
@@ -58,17 +59,21 @@ scg::Volume temp(VOLUME_SIZE, VOLUME_SIZE, VOLUME_SIZE);//临时体数据存储
 int samples;//采样次数
 scg::Vec3f buffer[SCREEN_HEIGHT][SCREEN_WIDTH];//三维向量
 
-int test()
+int test(std::string configFilePath)
 {
     InitialiseBuffer();//初始化缓存
-
+    std::ifstream configFile(configFilePath);
+    js::json config;
+    configFile >> config;
     screen *screen = InitializeSDL(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN_MODE);//初始化sdl
 
     // Initialise scene
     settings = scg::loadSettings();
-    scg::loadSettingsFile(settings);//加载设置文件
+    scg::loadSettingsFile(settings,config["transferfile"].get<std::string>());//加载设置文件
+    //scg::loadSettingsFile(settings,"/home/jack/workhome/PATHTRACER/transfer.txt");//加载设置文件
+
     scene = scg::loadTestModel(150.0f);//加载康奈尔盒子
-    //scg::loadBrain(volume, temp, scene, settings);//加载大脑数据
+    scg::loadBrain(volume, temp, scene, settings,config["brainpath"].get<std::string>());//加载大脑数据
     //scg::loadManix(volume, temp, scene, settings);//加载
     //scg::loadBunny(volume, temp, scene, settings);
 
@@ -171,7 +176,7 @@ bool Update(screen *screen)
                     break;
                 case SDLK_r://加载设置文件
                     InitialiseBuffer();
-                    scg::loadSettingsFile(settings);
+                    scg::loadSettingsFile(settings,"/home/jack/workhome/PATHTRACER");
                     break;
                 case SDLK_p://截图
                     saveScreenshot(screen);
@@ -221,6 +226,7 @@ void saveScreenshot(screen *screen)
 
 #include <pybind11/pybind11.h>
 #include <pybind11/embed.h>
+
 namespace py = pybind11;
 
 
@@ -280,7 +286,7 @@ PYBIND11_MODULE(raytracer, m)
     ////光线类绑定  有问题！！！
     py::class_<scg::Ray>(m, "Ray")
             .def(py::init<>())
-            .def(py::init<const scg::Vec3f&, const scg::Vec3f&, float, float>())
+            .def(py::init<const scg::Vec3f &, const scg::Vec3f &, float, float>())
             .def_readwrite("direction", &scg::Ray::direction)
             .def_readwrite("maxT", &scg::Ray::maxT)
             .def_readwrite("minT", &scg::Ray::minT)
@@ -339,7 +345,6 @@ PYBIND11_MODULE(raytracer, m)
             .def_readwrite("useBox", &scg::Settings::useBox);
 
 
-
     m.def("Draw", &Draw);
     m.def("loadTestModel", &scg::loadTestModel);
 
@@ -352,10 +357,9 @@ PYBIND11_MODULE(raytracer, m)
     m.def("InitializeSDL", &InitializeSDL);
 
 
-
     m.def("loadBrain", &scg::loadBrain);
     m.def("loadBunny", &scg::loadBunny);
     m.def("loadManix", &scg::loadManix);
-    m.def("test",&test);
+    m.def("test", &test);
 }
 

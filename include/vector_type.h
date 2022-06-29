@@ -6,7 +6,7 @@
 #include <cmath>
 #include <iostream>
 #include <utility>
-//ºóĞøº¯ÊıÎªÆ¥ÅäÊı¾İÀàĞÍµÄ¸÷ÖÖÔËËã·ûÖØĞ´
+//åç»­å‡½æ•°ä¸ºåŒ¹é…æ•°æ®ç±»å‹çš„å„ç§è¿ç®—ç¬¦é‡å†™
 
 
 namespace scg
@@ -19,14 +19,14 @@ public:
     union
     {
         // TODO: check order
-        struct//×ø±ê
+        struct//åæ ‡
         {
             T x;
             T y;
             T z;
             T w;
         };
-        struct//ÑÕÉ«
+        struct//é¢œè‰²
         {
             T r;
             T g;
@@ -38,10 +38,10 @@ public:
             T u;
             T v;
         };
-        T data[DIM];//Î¬¶È
+        T data[DIM];//ç»´åº¦
     };
 
-    Vector()//Ä¬ÈÏ¹¹Ôì
+    Vector()//é»˜è®¤æ„é€ 
     {
         for (int i = 0; i < DIM; ++i)
         {
@@ -52,22 +52,22 @@ public:
     Vector(Vector const& arg) = default;
 
     template<typename V>
-    Vector(V arg)//ÓĞ²Î¹¹ÔìÄ£°å
+    Vector(V arg)//æœ‰å‚æ„é€ æ¨¡æ¿
     {
         for (int i = 0; i < DIM; ++i)
         {
-            this->data[i] = static_cast<T>(arg);//Ç¿ÖÆ×ª»¯TÖÁdata[i]µÄÊı¾İÀàĞÍ
+            this->data[i] = static_cast<T>(arg);//å¼ºåˆ¶è½¬åŒ–Tè‡³data[i]çš„æ•°æ®ç±»å‹
         }
     }
 
-	//²ÎÊı°ütypename... Args£¬
+	//å‚æ•°åŒ…typename... Argsï¼Œ
     template <typename... Args>
     /*explicit*/ Vector(Args... args) : data{ T(args)... } 
 	{
-        static_assert(sizeof...(Args) == DIM, "Wrong number of arguments.");//È·±£argumentsºÍÎ¬¶È³ß´çÒ»Ñù
+        static_assert(sizeof...(Args) == DIM, "Wrong number of arguments.");//ç¡®ä¿argumentså’Œç»´åº¦å°ºå¯¸ä¸€æ ·
     }
 
-	//ÄÚÁªº¯Êı
+	//å†…è”å‡½æ•°
     inline T length() const
     {
         T length = 0;
@@ -75,10 +75,10 @@ public:
         {
             length += this->data[i] * this->data[i];
         }
-        return std::sqrt(length);//·µ»ØÊı¾İµÄ¾ù·½¸ù
+        return std::sqrt(length);//è¿”å›æ•°æ®çš„å‡æ–¹æ ¹
     }
 
-	//ÖØĞ´<<£¬Êä³öÊı¾İ
+	//é‡å†™<<ï¼Œè¾“å‡ºæ•°æ®
     friend std::ostream& operator<<(std::ostream& out, Vector const& arg)
     {
         out << "Vector{ ";
@@ -96,7 +96,7 @@ public:
 
 
     // Unary operators
-	//µ¥ÔªÔËËã·û£¬ºó¼Óconst±íÊ¾º¯ÊıÎªÖ»¶Á£¬ÖØĞ´-¡£
+	//å•å…ƒè¿ç®—ç¬¦ï¼ŒååŠ constè¡¨ç¤ºå‡½æ•°ä¸ºåªè¯»ï¼Œé‡å†™-ã€‚
     inline Vector operator -() const
     {
         Vector result;
@@ -104,11 +104,11 @@ public:
         {
             result.data[i] = -this->data[i];
         }
-        return result;//Êä³öÊı¾İ¸ºÖµ
+        return result;//è¾“å‡ºæ•°æ®è´Ÿå€¼
     }
 
     // Binary operators
-	//¶ş½øÖÆÔËËã·û£¬ÖØĞ´+
+	//äºŒè¿›åˆ¶è¿ç®—ç¬¦ï¼Œé‡å†™+
     template<typename V>
     inline Vector operator +(V const& arg) const
     {
@@ -289,13 +289,13 @@ public:
     }
 };
 
-//¶ÔÊı¾İ½øĞĞ¸÷ÖÖÔËËã¼°Ğı×ª
+//å¯¹æ•°æ®è¿›è¡Œå„ç§è¿ç®—åŠæ—‹è½¬
 
 // Useful types
-//¸øÒÑÖªvectorÆğ¸öĞÂÃû×Ö
+//ç»™å·²çŸ¥vectorèµ·ä¸ªæ–°åå­—
 typedef Vector<2, int> Vec2i;
 typedef Vector<2, float> Vec2f;
-typedef Vector<3, float> Vec3f;//ÈıÎ¬ÏòÁ¿£¬ÓÃÀ´ÊµÏÖ¹ØÓÚÈıÎ¬ÏòÁ¿µÄ¸÷ÖÖ²Ù×÷
+typedef Vector<3, float> Vec3f;//ä¸‰ç»´å‘é‡ï¼Œç”¨æ¥å®ç°å…³äºä¸‰ç»´å‘é‡çš„å„ç§æ“ä½œ
 typedef Vector<4, float> Vec4f;
 
 // Vector methods

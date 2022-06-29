@@ -6,7 +6,7 @@
 
 namespace scg
 {
-//´«Èë°üÎ§ºÐÁ½¸ö×ø±ê
+//ä¼ å…¥åŒ…å›´ç›’ä¸¤ä¸ªåæ ‡
 BoundingBox::BoundingBox(Vec3f const& min, Vec3f const& max)
 {
     this->min = min;
@@ -14,15 +14,15 @@ BoundingBox::BoundingBox(Vec3f const& min, Vec3f const& max)
     this->mid = (min + max) / 2.0f;
 }
 
-//´«Èë¹âÏß£¬ÅÐ¶ÏÏà½»ÐÔ
+//ä¼ å…¥å…‰çº¿ï¼Œåˆ¤æ–­ç›¸äº¤æ€§
 void BoundingBox::getIntersection(Ray const& ray, BBIntersection &intersection) const
 {
     intersection.valid = false;
 
-	//NaN£ºÎ´¶¨Òå»ò²»¿É±íÊ¾µÄÖµ
-	//Inf:Ò»¸ö¼¯ºÏ×î´óµÄÏÂ½ç
+	//NaNï¼šæœªå®šä¹‰æˆ–ä¸å¯è¡¨ç¤ºçš„å€¼
+	//Inf:ä¸€ä¸ªé›†åˆæœ€å¤§çš„ä¸‹ç•Œ
     // Assume NaN can only occur if INF(invR) * 0(dist) => intersect because dist = 0
-    Vec3f invR		= Vec3f(1.0f) / ray.direction;//¹âÏß·½ÏòµÄÄæ
+    Vec3f invR		= Vec3f(1.0f) / ray.direction;//å…‰çº¿æ–¹å‘çš„é€†
     Vec3f dMin = this->min - ray.origin;
     Vec3f dMax = this->max - ray.origin;
     

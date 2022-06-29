@@ -9,7 +9,7 @@
 #include <iostream>
 #include <cstdint>
 #include <cstring>
-//¶¨Òåscreen½á¹¹Ìå£¬°üº¬´°¿Ú¡¢äÖÈ¾Æ÷¡¢ÎÆÀí¡¢»º´æ 
+//å®šä¹‰screenç»“æ„ä½“ï¼ŒåŒ…å«çª—å£ã€æ¸²æŸ“å™¨ã€çº¹ç†ã€ç¼“å­˜ 
 typedef struct{
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -56,7 +56,7 @@ void SDL_SaveImage(screen *s, const char* filename)
 
 }
 
-//¹Ø±Õ½ø³Ì
+//å…³é—­è¿›ç¨‹
 void KillSDL(screen* s)
 {
     delete[] s->buffer;
@@ -66,7 +66,7 @@ void KillSDL(screen* s)
     SDL_Quit();
 }
 
-//¸üĞÂÎÆÀí
+//æ›´æ–°çº¹ç†
 void SDL_Renderframe(screen* s)
 {
     SDL_UpdateTexture(s->texture, NULL, s->buffer, s->width*sizeof(uint32_t));
@@ -75,7 +75,7 @@ void SDL_Renderframe(screen* s)
     SDL_RenderPresent(s->renderer);
 }
 
-//³õÊ¼»¯SDL
+//åˆå§‹åŒ–SDL
 screen* InitializeSDL(int width,int height, bool fullscreen)
 {
     SDL_version compiled;
@@ -104,7 +104,7 @@ screen* InitializeSDL(int width,int height, bool fullscreen)
                   << SDL_GetError() << std::endl;
         exit(1);
     }
-	//´ÓÕâ¿ªÊ¼
+	//ä»è¿™å¼€å§‹
     screen *s = new screen;
     s->width = width;
     s->height = height;
@@ -127,7 +127,7 @@ screen* InitializeSDL(int width,int height, bool fullscreen)
         exit(1);
     }
 
-    flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;//¼ÓËÙ·½·¨
+    flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;//åŠ é€Ÿæ–¹æ³•
     s->renderer = SDL_CreateRenderer(s->window, -1, flags);
     if(s->renderer == 0)
     {
@@ -152,7 +152,7 @@ screen* InitializeSDL(int width,int height, bool fullscreen)
     return s;
 }
 
-//»­ÏñËØ
+//ç”»åƒç´ 
 void PutPixelSDL(screen* s, int x, int y, scg::Vec3f colour)
 {
     if(x<0 || x>=s->width || y<0 || y>=s->height)
@@ -160,9 +160,9 @@ void PutPixelSDL(screen* s, int x, int y, scg::Vec3f colour)
         std::cout << "apa" << std::endl;
         return;
     }
-	//uint32_t 32Î»µÄÎŞ·ûºÅÕûĞÍ
+	//uint32_t 32ä½çš„æ— ç¬¦å·æ•´å‹
     uint32_t alpha = 255;
-    uint32_t r = uint32_t( scg::clamp( 255*colour.r, 0.f, 255.f ) );//clampÏŞ¶¨º¯Êı£¬ÏŞ¶¨ÔÚ0~255Ö®¼ä
+    uint32_t r = uint32_t( scg::clamp( 255*colour.r, 0.f, 255.f ) );//clampé™å®šå‡½æ•°ï¼Œé™å®šåœ¨0~255ä¹‹é—´
     uint32_t g = uint32_t( scg::clamp( 255*colour.g, 0.f, 255.f ) );
     uint32_t b = uint32_t( scg::clamp( 255*colour.b, 0.f, 255.f ) );
 

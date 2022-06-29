@@ -10,7 +10,7 @@ namespace scg
 inline Vec3f reflect(Vec3f const& v, Vec3f const& normal) {
     return normal * 2.0f * dot(v, normal) - v;
 }
-//ÕÛÉä
+//æŠ˜å°„
 inline Vec3f refract(const Vec3f &V, const Vec3f &N, float VdotN, float eta, float sinSquaredThetaT)
 {
     return N * (eta * VdotN - sqrtf(1.0f - sinSquaredThetaT)) - V * eta;
@@ -25,7 +25,7 @@ inline void createCoordinateSystem(Vec3f const& N, Vec3f &Nt, Vec3f &Nb)
     Nb = cross(N, Nt);
 }
 
-//¾ùÔÈ°ëÇò²ÉÑù
+//å‡åŒ€åŠçƒé‡‡æ ·
 inline Vec3f uniformSampleHemisphere(float const& r1, float const& r2)
 {
     // cos(theta) = u1 = y
@@ -37,7 +37,7 @@ inline Vec3f uniformSampleHemisphere(float const& r1, float const& r2)
     return Vec3f(x, r1, z);
 }
 
-//°ëÇò²ÉÑù
+//åŠçƒé‡‡æ ·
 inline Vec3f sampleHemisphere(Vec3f const& normal, Sampler& sampler)
 {
     Vec3f Nt, Nb;
@@ -53,7 +53,7 @@ inline Vec3f sampleHemisphere(Vec3f const& normal, Sampler& sampler)
 
     return nextDirection;
 }
-//Çò²ÉÑù
+//çƒé‡‡æ ·
 inline Vec3f sampleSphere(Sampler &sampler)
 {
     // Mathsy version

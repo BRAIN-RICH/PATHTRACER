@@ -10,7 +10,7 @@ class Octree
 {
 public:
     BoundingBox bb;
-    Octree* nodes[8];//½Úµã
+    Octree* nodes[8];//èŠ‚ç‚¹
     bool isLeaf;
 
     int mask; // Mask for buckets inside

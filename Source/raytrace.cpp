@@ -52,7 +52,7 @@ bool getClosestIntersection(
         }
         volumeRay.origin -= scene.volumePos;
 
-		//三种不同的渲染类型，均为woodcock光线投射
+		//涓夌涓嶅悓鐨勬覆鏌撶被鍨嬶紝鍧囦负woodcock鍏夌嚎鎶曞皠
         if ((settings.renderType == 0 && castRayWoodcock(*scene.volume, volumeRay, intersection, settings, sampler)) ||
             (settings.renderType == 1 && castRayWoodcockFast(*scene.volume, volumeRay, intersection, settings, sampler)) ||
             (settings.renderType == 2 && castRayWoodcockFast2(*scene.volume, volumeRay, intersection, settings, sampler)))

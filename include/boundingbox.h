@@ -8,7 +8,7 @@
 
 namespace scg
 {
-//°üÎ§ºĞ½»²æ
+//åŒ…å›´ç›’äº¤å‰
 class BBIntersection
 {
 public:
@@ -31,7 +31,7 @@ public:
         this->farT		= std::numeric_limits<float>::max();
     }
 
-	//ÖØÔØ¸³Öµ·ûºÅ£¬Ê¹°üÎ§ºĞ¼äÄÜ»¥Ïà¸³Öµ
+	//é‡è½½èµ‹å€¼ç¬¦å·ï¼Œä½¿åŒ…å›´ç›’é—´èƒ½äº’ç›¸èµ‹å€¼
     BBIntersection& operator = (BBIntersection const& Other)
     {
         this->valid			= Other.valid;
@@ -51,15 +51,15 @@ public:
 class BoundingBox
 {
 public:
-    Vec3f min;//ºĞ×Ó×îĞ¡´¦
+    Vec3f min;//ç›’å­æœ€å°å¤„
     Vec3f max;
     Vec3f mid;
 
     BoundingBox() {};
 
-    BoundingBox(Vec3f const&, Vec3f const&);//´«ÈëÁ½¸ö¹Ø¼üÎ»ÖÃ×ø±ê
+    BoundingBox(Vec3f const&, Vec3f const&);//ä¼ å…¥ä¸¤ä¸ªå…³é”®ä½ç½®åæ ‡
 
-    void getIntersection(Ray const& ray, BBIntersection &) const;//²é¿´¹âÏßÊÇ·ñÓë°üÎ§ºĞ½»²æ
+    void getIntersection(Ray const& ray, BBIntersection &) const;//æŸ¥çœ‹å…‰çº¿æ˜¯å¦ä¸åŒ…å›´ç›’äº¤å‰
 };
 
 }

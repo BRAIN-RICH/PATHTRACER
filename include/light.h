@@ -12,19 +12,19 @@ namespace scg
 {
 
 // Information regarding the illuminance of a light at a certain position
-//ÌØ¶¨·½ÏòÉÏ¹âµÄÕÕÃ÷ĞÅÏ¢,ÕÒµ½¹âÏß×î½üµÄÒ»¸ö´ò»÷µã£¬°Ñµ±Ç°µãµÄĞÅÏ¢£¨Î»ÖÃ£¬·¨ÏòÁ¿£¬t£©±£´æÏÂÀ´
+//ç‰¹å®šæ–¹å‘ä¸Šå…‰çš„ç…§æ˜ä¿¡æ¯,æ‰¾åˆ°å…‰çº¿æœ€è¿‘çš„ä¸€ä¸ªæ‰“å‡»ç‚¹ï¼ŒæŠŠå½“å‰ç‚¹çš„ä¿¡æ¯ï¼ˆä½ç½®ï¼Œæ³•å‘é‡ï¼Œtï¼‰ä¿å­˜ä¸‹æ¥
 class LightHit
 {
 public:
     Vec3f colour;
-    float pdf;//¸ÅÂÊÃÜ¶Èº¯Êı
+    float pdf;//æ¦‚ç‡å¯†åº¦å‡½æ•°
 
     Vec3f direction; // Normalised vector pointing to the source. Equal to the normal in case of AbstractLight.
     float distance;
 };
 
 // Light types
-//Ã¶¾Ù¹âÏßÀàĞÍ
+//æšä¸¾å…‰çº¿ç±»å‹
 enum LightType {
     LightType_Abstract,
     LightType_Point,
@@ -32,21 +32,21 @@ enum LightType {
     LightType_Object
 };
 
-//µÆ¹âĞé»ùÀà
+//ç¯å…‰è™šåŸºç±»
 class Light
 {
 protected:
-    Vec3f colour;//ÑÕÉ«
-    float intensity;//Ç¿¶È
+    Vec3f colour;//é¢œè‰²
+    float intensity;//å¼ºåº¦
 
 public:
     Light(Vec3f const& colour, float intensity):
         colour(colour), intensity(intensity) {};
 
-	//ÕÕÃ÷´¿Ğéº¯Êı
+	//ç…§æ˜çº¯è™šå‡½æ•°
     virtual LightHit illuminate(ScatterEvent const&, Sampler &) const = 0;
 
-	//»ñÈ¡·¢Éä¹â
+	//è·å–å‘å°„å…‰
     virtual Vec3f getEmittance(ScatterEvent const& interaction) const
     {
         // Do not illuminate on the back side
@@ -63,7 +63,7 @@ public:
 
 // An abstract light, assume it is located at the position where it is sampled
 // Always returns maximum intensity
-//³éÏóµÆ¹âÀà£¬¼ÙÉèÎ»ÓÚ²ÉÑùµã£¬×ÜÊÇ·µ»Ø×î´ó¹âÇ¿¡£¼Ì³Ğ×ÔµÆ¹â¸¸Àà
+//æŠ½è±¡ç¯å…‰ç±»ï¼Œå‡è®¾ä½äºé‡‡æ ·ç‚¹ï¼Œæ€»æ˜¯è¿”å›æœ€å¤§å…‰å¼ºã€‚ç»§æ‰¿è‡ªç¯å…‰çˆ¶ç±»
 class AbstractLight : public Light
 {
 private:
@@ -79,8 +79,8 @@ public:
         LightHit lightHit;
 
         lightHit.colour = colour * intensity;
-        lightHit.pdf = 1;//¸ÅÂÊÃÜ¶Èº¯ÊıÎª1
-        lightHit.direction = interaction.normal;//·µ»Ø»÷´ò´¦µÄÕı½»·½Ïò
+        lightHit.pdf = 1;//æ¦‚ç‡å¯†åº¦å‡½æ•°ä¸º1
+        lightHit.direction = interaction.normal;//è¿”å›å‡»æ‰“å¤„çš„æ­£äº¤æ–¹å‘
 
         return lightHit;
     }
@@ -93,7 +93,7 @@ public:
 
 // Background light, comes from any direction
 // Should be used on the scene member variable, not the light list
-//±³¾°¹â
+//èƒŒæ™¯å…‰
 class BackgroundLight : public Light
 {
 private:
@@ -121,7 +121,7 @@ public:
 };
 
 // A source of light at a particular position with no shape/body
-//µã¹âÔ´
+//ç‚¹å…‰æº
 class PointLight : public Light
 {
 private:
@@ -153,7 +153,7 @@ public:
 };
 
 // A source of light in a particular direction with no shape/body and position
-//·½Ïò¹âÔ´
+//æ–¹å‘å…‰æº
 class DirectionalLight : public Light
 {
 private:
@@ -183,7 +183,7 @@ public:
     }
 };
 
-//ÎïÌå·´Éä¹â
+//ç‰©ä½“åå°„å…‰
 class ObjectLight : public Light // TODO: Add m_area for scaling luminosity with size
 {
 private:

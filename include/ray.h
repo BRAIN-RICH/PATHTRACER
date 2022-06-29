@@ -9,24 +9,24 @@ namespace scg
 class Ray
 {
 public:
-    Vec3f origin;//ÈıÎ¬Ô­µã
-    Vec3f direction;//ÈıÎ¬·½Ïò
-    float minT;//ÆğÊ¼Ê±¼ä
-    float maxT;//½áÊøÊ±¼ä
+    Vec3f origin;//ä¸‰ç»´åŸç‚¹
+    Vec3f direction;//ä¸‰ç»´æ–¹å‘
+    float minT;//èµ·å§‹æ—¶é—´
+    float maxT;//ç»“æŸæ—¶é—´
 
     Ray() = default;
 
-	//¸ù¾İÔ­µã£¬·½Ïò£¬ÆğÊ¼Ê±¼ä£¬½áÊøÊ±¼ä´´½¨¹âÏß
+	//æ ¹æ®åŸç‚¹ï¼Œæ–¹å‘ï¼Œèµ·å§‹æ—¶é—´ï¼Œç»“æŸæ—¶é—´åˆ›å»ºå…‰çº¿
     Ray(Vec3f const& origin, Vec3f const& direction, float minT = 0, float maxT = INF):
         origin(origin), direction(normalise(direction)), minT(minT), maxT(maxT) {};
 
-	//ÖØÔØº¯Êıµ÷ÓÃÔËËã·û
+	//é‡è½½å‡½æ•°è°ƒç”¨è¿ç®—ç¬¦
     inline Vec3f operator()(float const t) const
     {
-        return origin + direction * t;//·µ»ØÔ­µã+¹âÏß*Ê±¼ä£¬¼´¹âÏßÎ»ÖÃ
+        return origin + direction * t;//è¿”å›åŸç‚¹+å…‰çº¿*æ—¶é—´ï¼Œå³å…‰çº¿ä½ç½®
     }
 
-	//ÅĞ¶Ï¹âÏßÊÇ·ñ»¹ÔÚºĞ×ÓÖĞ
+	//åˆ¤æ–­å…‰çº¿æ˜¯å¦è¿˜åœ¨ç›’å­ä¸­
     inline bool isInside(float distance) const
     {
         return minT <= distance && distance <= maxT;

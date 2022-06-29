@@ -10,16 +10,16 @@ namespace scg
 struct Intersection
 {
     // Intersection information
-    int objectID;//ÎïÌåid£¬²ÉÑùµã£¿
+    int objectID;//ç‰©ä½“idï¼Œé‡‡æ ·ç‚¹ï¼Ÿ
     Vec3f position;
     float distance;
 
     // Geometry normal at intersection point
-    Vec3f normal;//Ïà½»µã¼¸ºÎÕı½»
+    Vec3f normal;//ç›¸äº¤ç‚¹å‡ ä½•æ­£äº¤
 
     // Material information
-    SurfaceType surfaceType;//±íÃæÀàĞÍ
-    size_t materialID;//²ÄÖÊ
+    SurfaceType surfaceType;//è¡¨é¢ç±»å‹
+    size_t materialID;//æè´¨
     Vec2f uv;
 };
 

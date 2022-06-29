@@ -13,27 +13,27 @@ namespace scg
 class Settings
 {
 public:
-    int renderType;//äÖÈ¾ÀàĞÍ
-    int minDepth;//×îĞ¡Éî¶È
-    int maxDepth;//×î´óÉî¶È
-    float gamma;//Ù¤Âí½ÃÕı£¿
+    int renderType;//æ¸²æŸ“ç±»å‹
+    int minDepth;//æœ€å°æ·±åº¦
+    int maxDepth;//æœ€å¤§æ·±åº¦
+    float gamma;//ä¼½é©¬çŸ«æ­£ï¼Ÿ
 
-    Vec3f backgroundLight;//±³¾°¹â
+    Vec3f backgroundLight;//èƒŒæ™¯å…‰
 
-    bool useBox;//Ê¹ÓÃ°üÎ§ºĞ
+    bool useBox;//ä½¿ç”¨åŒ…å›´ç›’
     BoundingBox bb;
 
-    float stepSize;//²½³¤
+    float stepSize;//æ­¥é•¿
     float densityScale;//
-    float gradientFactor;//Ìİ¶ÈÒòËØ
+    float gradientFactor;//æ¢¯åº¦å› ç´ 
 
-    int octreeLevels;//°Ë²æÊ÷²ãÊı
+    int octreeLevels;//å…«å‰æ ‘å±‚æ•°
 
     TransferFunction transferFunction;
 
     std::vector<float> brackets;
-    std::vector<float> maxOpacity;//×î´óÍ¸Ã÷¶È
-    std::vector<float> minStepSize;//×îĞ¡²½³¤
+    std::vector<float> maxOpacity;//æœ€å¤§é€æ˜åº¦
+    std::vector<float> minStepSize;//æœ€å°æ­¥é•¿
 
     int mask;
 };

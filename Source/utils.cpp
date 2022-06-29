@@ -14,7 +14,7 @@
 #include <fstream>
 #include <map>
 #include <vector>
-
+namespace fs = std::filesystem;
 namespace scg
 {
 
@@ -22,20 +22,20 @@ Settings loadSettings()
 {
     Settings settings;
 
-    settings.renderType = 2;//ÉèÖÃ³õÊ¼äÖÈ¾Ä£Ê½
-    settings.minDepth = 1;//×îĞ¡µ¯Éä´ÎÊı
-    settings.maxDepth = 50;//×î´óµ¯Éä´ÎÊı
+    settings.renderType = 2;//è®¾ç½®åˆå§‹æ¸²æŸ“æ¨¡å¼
+    settings.minDepth = 1;//æœ€å°å¼¹å°„æ¬¡æ•°
+    settings.maxDepth = 50;//æœ€å¤§å¼¹å°„æ¬¡æ•°
     settings.gamma = 1.0f;
-    settings.backgroundLight = Vec3f{0.0f, 0.0f, 0.0f};//±³¾°¹â
+    settings.backgroundLight = Vec3f{0.0f, 0.0f, 0.0f};//èƒŒæ™¯å…‰
     settings.stepSize = 0.1f;
-    settings.useBox = false;//ÊÇ·ñÊ¹ÓÃ°üÎ§ºĞ
+    settings.useBox = false;//æ˜¯å¦ä½¿ç”¨åŒ…å›´ç›’
 
-    settings.octreeLevels = 5;//°Ë²æÊ÷²ãÊı
+    settings.octreeLevels = 5;//å…«å‰æ ‘å±‚æ•°
     settings.brackets = std::vector<float>{
         0, 1000, 1300, 1500, 1750, 1900, 2000, 2100, 2200, 2300, 2400, 2500, 2600, 2700, 2850, 3000, 3250, 3500, 99999 // 1 less than TF!
     };
-    settings.maxOpacity.resize(settings.brackets.size() - 1);//×î´óÍ¸Ã÷¶È
-    settings.minStepSize.resize(settings.brackets.size() - 1);//×îĞ¡²½³¤
+    settings.maxOpacity.resize(settings.brackets.size() - 1);//æœ€å¤§é€æ˜åº¦
+    settings.minStepSize.resize(settings.brackets.size() - 1);//æœ€å°æ­¥é•¿
 
     return settings;
 }
@@ -45,7 +45,7 @@ std::shared_ptr<Material> parseMaterial(std::ifstream &fin, std::shared_ptr<Text
     std::string type;
     fin >> type;
 
-	//²ÄÖÊÄ£ĞÍ£¬lamber £¬ phong £¬ glossy  , Mirror
+	//æè´¨æ¨¡å‹ï¼Œlamber ï¼Œ phong ï¼Œ glossy  , Mirror
     if (type == "Lambert")
     {
         return std::make_shared<Lambert>(Lambert{texture});
@@ -70,14 +70,18 @@ std::shared_ptr<Material> parseMaterial(std::ifstream &fin, std::shared_ptr<Text
         return std::make_shared<Mirror>(texture);
     }
 
-    return nullptr;//·µ»Ø¿ÕÖ¸Õë
+    return nullptr;//è¿”å›ç©ºæŒ‡é’ˆ
 }
 
-//¼ÓÔØÎÄ¼ş
-void loadSettingsFile(Settings &settings)
+//åŠ è½½æ–‡ä»¶,transfer.txt
+void loadSettingsFile(Settings &settings,std::string filename)
 {
     std::ifstream fin;
-    fin.open("D:/pathtracer/transfer.txt");
+    if (filename.size()==0)
+    {
+        throw "bad!";
+    }
+    fin.open(filename);
 
     std::string type;
     std::map<std::string, std::shared_ptr<Material>> materials;
@@ -199,13 +203,25 @@ void loadSettingsFile(Settings &settings)
     }
 }
 
-//¼ÓÔØÊı¾İ
-void loadBrain(scg::Volume& volume, scg::Volume& temp, Scene &scene, scg::Settings &settings)
+//åŠ è½½æ•°æ®
+void loadBrain(scg::Volume& volume, scg::Volume& temp, Scene &scene, scg::Settings &settings,std::string filepath)
 {
-    char filename[54] = "D:/pathtracer/data/StanfordBrain/mrbrain-16bit000.tif";
-    for (int x = 0; x < 99; ++x)
+    //char filename[54] = "D:/pathtracer/data/StanfordBrain/mrbrain-16bit000.tif";
+    fs::path &&_path(filepath);
+    if(!fs::exists(_path)||!fs::is_directory(_path))
     {
-        sprintf(filename + 46, "%03d.tif", x + 1);
+        std::cout << "need a path !" << std::endl;
+    }
+    std::vector<std::string > _file;
+    for (auto &&fe:fs::directory_iterator(filepath))
+    {
+        _file.push_back(fe.path());
+    }
+    std::sort(_file.begin(),_file.end());
+    for (int x = 0; x < _file.size(); ++x)
+    {
+        const char *filename = _file[x].c_str();
+        //sprintf(filename + 46, "%03d.tif", x + 1);
         std::cout << "Loading: " << filename << std::endl;
 
         TinyTIFFReaderFile* tiffr = TinyTIFFReader_open(filename);
@@ -215,9 +231,9 @@ void loadBrain(scg::Volume& volume, scg::Volume& temp, Scene &scene, scg::Settin
         }
         else
         {
-            int width = TinyTIFFReader_getWidth(tiffr);//»ñÈ¡¿í¶È
-            int height = TinyTIFFReader_getHeight(tiffr);//»ñÈ¡¸ß¶È
-            uint16_t* image = (uint16_t*)calloc((size_t)width * height, sizeof(uint16_t));//ÉêÇëÄÚ´æ¿Õ¼ä£¬²¢¸³ÖµÎª0.
+            int width = TinyTIFFReader_getWidth(tiffr);//è·å–å®½åº¦
+            int height = TinyTIFFReader_getHeight(tiffr);//è·å–é«˜åº¦
+            uint16_t* image = (uint16_t*)calloc((size_t)width * height, sizeof(uint16_t));//ç”³è¯·å†…å­˜ç©ºé—´ï¼Œå¹¶èµ‹å€¼ä¸º0.
             TinyTIFFReader_getSampleData(tiffr, image, 0);
 
             for (int y = 0; y < height; ++y)
@@ -260,7 +276,7 @@ void loadBrain(scg::Volume& volume, scg::Volume& temp, Scene &scene, scg::Settin
 
 void loadManix(Volume& volume, Volume& temp, Scene &scene, Settings &settings)
 {
-    std::ifstream fin;//´´½¨Ò»¸öÎÄ¼şÊäÈëÁ÷¶ÔÏó
+    std::ifstream fin;//åˆ›å»ºä¸€ä¸ªæ–‡ä»¶è¾“å…¥æµå¯¹è±¡
     //fin.open("../data/Manix/manix.raw");
     fin.open("D:pathtracer/data/raw/sample.raw");
 

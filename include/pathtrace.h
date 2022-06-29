@@ -96,9 +96,9 @@ Vec3f SampleOneLight(ScatterEvent& interaction, Scene const& scene, std::shared_
     return directLight * scene.lights.size();
 }
 
-//¸úËæ¹âÏß
+//è·Ÿéšå…‰çº¿
 Vec3f trace(
-    Scene const& scene,//³¡¾°
+    Scene const& scene,//åœºæ™¯
     Ray ray,
     Settings const& settings,
     Sampler &sampler)
@@ -110,8 +110,8 @@ Vec3f trace(
     interaction.iorI = 1.0f; // Air
 
     int bounces = 0;
-    int minBounces = settings.minDepth;//×îĞ¡µ¯Éä´ÎÊı
-    int maxBounces = settings.maxDepth;//×î´óµ¯Éä´ÎÊı
+    int minBounces = settings.minDepth;//æœ€å°å¼¹å°„æ¬¡æ•°
+    int maxBounces = settings.maxDepth;//æœ€å¤§å¼¹å°„æ¬¡æ•°
 
     for (bounces = 0; bounces < maxBounces; ++bounces)
     {
@@ -119,18 +119,18 @@ Vec3f trace(
         Intersection intersection;
 
 
-		//Èç¹ûÃ»ÓĞ´òµ½ÎïÌå£¬ÔòÓë·µ»ØÒ»¸ö±³¾°É«
+		//å¦‚æœæ²¡æœ‰æ‰“åˆ°ç‰©ä½“ï¼Œåˆ™ä¸è¿”å›ä¸€ä¸ªèƒŒæ™¯è‰²
         if (!getClosestIntersection(scene, ray, intersection, settings, sampler))
         {
-            colour += throughput * settings.backgroundLight;//³õÖµ£¨1£¬1£¬1£©*±³¾°É«
+            colour += throughput * settings.backgroundLight;//åˆå€¼ï¼ˆ1ï¼Œ1ï¼Œ1ï¼‰*èƒŒæ™¯è‰²
             break;
         }
 
         // Initialise interaction
-        interaction.position = intersection.position;//Ïà½»Î»ÖÃ
-        interaction.normal = intersection.normal;//Ïà½»Î»ÖÃ·¢ÏÖ
+        interaction.position = intersection.position;//ç›¸äº¤ä½ç½®
+        interaction.normal = intersection.normal;//ç›¸äº¤ä½ç½®å‘ç°
         interaction.uv = interaction.uv;
-        interaction.outputDir = -ray.direction;//¹âÏß³öÉä·½Ïò
+        interaction.outputDir = -ray.direction;//å…‰çº¿å‡ºå°„æ–¹å‘
         interaction.iorO = 0.0f;
 
         std::shared_ptr<Material> material;
@@ -139,7 +139,7 @@ Vec3f trace(
         {
             Vec3f localPos = intersection.position - scene.volumePos;
             Vec3f normal = scene.volume->getGradient(localPos, 0.5f); // TODO: Maybe use TransferFunction
-            float magnitude = normal.length();//Á¿¼¶
+            float magnitude = normal.length();//é‡çº§
             float intensity = scene.volume->sampleVolume(localPos);
             Vec4f out = settings.transferFunction.evaluate(intensity);
 
@@ -150,7 +150,7 @@ Vec3f trace(
             float probBRDF = (1.0f - std::exp(-settings.gradientFactor * (magnitude / intensity)));
 
             // Surface
-			//Ìå»ı±íÃæ
+			//ä½“ç§¯è¡¨é¢
             if (sampler.nextFloat() < probBRDF)
             {
                 interaction.position += interaction.normal * settings.stepSize;
@@ -178,7 +178,7 @@ Vec3f trace(
         }
 
         // Calculate direct light
-		//¼ÆËãÖ±½Ó¹âÕÕ
+		//è®¡ç®—ç›´æ¥å…‰ç…§
         colour += throughput * SampleOneLight(interaction, scene, material, hitLight, settings, sampler);
 
         if (bounces == maxBounces - 1)
@@ -207,7 +207,7 @@ Vec3f trace(
         ray.minT = RAY_EPS;
 
         // Russian Roulette
-		//¶íÂŞË¹ÂÖÅÌ¶Ä
+		//ä¿„ç½—æ–¯è½®ç›˜èµŒ
         if (bounces >= minBounces - 1)
         {
             float p = std::max(throughput.x, std::max(throughput.y, throughput.z));

@@ -14,13 +14,13 @@ namespace scg
 class Scene
 {
 public:
-    std::vector<std::shared_ptr<Light>> lights;//´æ·Å¹âÏßÖÇÄÜÖ¸ÕëµÄÈİÆ÷
-    std::vector<std::shared_ptr<Material>> materials;//´æ·Å²ÄÖÊÖÇÄÜÖ¸ÕëµÄÈİÆ÷
-    std::vector<std::shared_ptr<Object>> objects;//´æ·ÅÎïÌåÖÇÄÜÖ¸ÕëµÄÈİÆ÷
+    std::vector<std::shared_ptr<Light>> lights;//å­˜æ”¾å…‰çº¿æ™ºèƒ½æŒ‡é’ˆçš„å®¹å™¨
+    std::vector<std::shared_ptr<Material>> materials;//å­˜æ”¾æè´¨æ™ºèƒ½æŒ‡é’ˆçš„å®¹å™¨
+    std::vector<std::shared_ptr<Object>> objects;//å­˜æ”¾ç‰©ä½“æ™ºèƒ½æŒ‡é’ˆçš„å®¹å™¨
 
     // Supports single volume
     Vec3f volumePos;
-    std::shared_ptr<Volume> volume;//ÖÇÄÜÖ¸Õë£¬Ö¸ÏòÀàĞÍÎªVolumeµÄ¶ÔÏó
+    std::shared_ptr<Volume> volume;//æ™ºèƒ½æŒ‡é’ˆï¼ŒæŒ‡å‘ç±»å‹ä¸ºVolumeçš„å¯¹è±¡
 };
 
 }

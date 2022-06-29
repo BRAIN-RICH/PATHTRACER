@@ -11,16 +11,16 @@
 
 namespace scg
 {
-//½Úµã
+//èŠ‚ç‚¹
 class Node
 {
 //private:
 public:
-    float intensity;//Ç¿¶È
-    float opacity;//Í¸Ã÷¶È
+    float intensity;//å¼ºåº¦
+    float opacity;//é€æ˜åº¦
 
-    Vec3f colour;//ÑÕÉ«
-    std::shared_ptr<Material> material;//ÖÇÄÜÖ¸ÕëÖ¸Ïò²ÄÖÊ
+    Vec3f colour;//é¢œè‰²
+    std::shared_ptr<Material> material;//æ™ºèƒ½æŒ‡é’ˆæŒ‡å‘æè´¨
 
     friend class TransferFunction;
 
@@ -32,7 +32,7 @@ public:
 // Nice code design here...
 inline bool operator <(float const& intensity, Node const& node)
 {
-    return intensity < node.intensity;//·µ»Ø²¼¶ûÖµ£¬ÅĞ¶Ï½ÚµãÇ¿¶È
+    return intensity < node.intensity;//è¿”å›å¸ƒå°”å€¼ï¼Œåˆ¤æ–­èŠ‚ç‚¹å¼ºåº¦
 }
 
 class TransferFunction

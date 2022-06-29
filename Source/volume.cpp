@@ -11,13 +11,13 @@ Volume::Volume(int height, int width, int depth):
 {
     //this->data = new int[depth, height, width];
 
-	//°üÎ§ºĞµÄÁ½¸ö¶¥µã£¬´´½¨¿ÕµÄ°Ë²æÊ÷
+	//åŒ…å›´ç›’çš„ä¸¤ä¸ªé¡¶ç‚¹ï¼Œåˆ›å»ºç©ºçš„å…«å‰æ ‘
     this->octree = Octree(
         BoundingBox(Vec3f(0 + V_EPS, 0 + V_EPS, 0 + V_EPS), Vec3f(230 - V_EPS, 220 - V_EPS, 135 - V_EPS))
     );
 }
 
-//½¨Á¢°Ë²æÊ÷
+//å»ºç«‹å…«å‰æ ‘
 void buildOctree(Volume const& volume, Octree &octree, int levels, Settings const& settings)
 {
     BoundingBox &bb = octree.bb;

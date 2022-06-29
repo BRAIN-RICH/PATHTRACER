@@ -10,28 +10,28 @@ namespace scg
 class Camera
 {
 public:
-    Vec3f position;//ÈıÎ¬Î»ÖÃ
-    Vec3f rotation;//ÈıÎ¬Ğı×ª½Ç¶È
+    Vec3f position;//ä¸‰ç»´ä½ç½®
+    Vec3f rotation;//ä¸‰ç»´æ—‹è½¬è§’åº¦
 
-    int width;//ÆÁÄ»¿í¶È
-    int height;//ÆÁÄ»¸ß¶È
+    int width;//å±å¹•å®½åº¦
+    int height;//å±å¹•é«˜åº¦
 
-    bool antialiasing = true;//¿¹¾â³İ
+    bool antialiasing = true;//æŠ—é”¯é½¿
 
-    float aperture = 0;//¹âÈ¦¿×¾¶
-    float focalLength = 0.5;//½¹¾à
+    float aperture = 0;//å…‰åœˆå­”å¾„
+    float focalLength = 0.5;//ç„¦è·
 
     //Camera() = default;
 
 
-	//»ñÈ¡¹âÏßÆğÊ¼Î»ÖÃ
+	//è·å–å…‰çº¿èµ·å§‹ä½ç½®
     Ray getRay(int const x, int const y, Sampler &sampler) const
     {
         float dX = 0;
         float dY = 0;
 
         // Apply jitter for antialiasing
-		//ÔÚ¿¹¾â³İÖĞÌí¼Ó¶¶¶¯£¬¼´ÔÚÃ¿Ö¡²ÉÑùÊ±£¬½«²ÉÑùµã½øĞĞÆ«ÒÆ£¬Æ«ÒÆ0.5
+		//åœ¨æŠ—é”¯é½¿ä¸­æ·»åŠ æŠ–åŠ¨ï¼Œå³åœ¨æ¯å¸§é‡‡æ ·æ—¶ï¼Œå°†é‡‡æ ·ç‚¹è¿›è¡Œåç§»ï¼Œåç§»0.5
         if (antialiasing)
         {
             dX = sampler.nextFloat() - 0.5f;
@@ -44,14 +44,14 @@ public:
             (width + height) / 2};
         dir = rotate(dir, rotation);
 
-        return Ray{position, dir};//·µ»Ø¹âÏßµÄÎ»ÖÃºÍ·½Ïò
+        return Ray{position, dir};//è¿”å›å…‰çº¿çš„ä½ç½®å’Œæ–¹å‘
     }
 
-	//»ñÈ¡¹âÏßÊµÊ±Î»ÖÃ
+	//è·å–å…‰çº¿å®æ—¶ä½ç½®
     Ray getLensRay(int const x, int const y, Sampler &sampler) const
     {
         Ray focalRay = getRay(x, y, sampler);
-        Vec3f objective = focalRay(focalLength);//´Ë´¦£¨£©ÖØ¶¨Òå£¬±íÊ¾·µ»ØÊµÊ±¹âÏßÎ»ÖÃ
+        Vec3f objective = focalRay(focalLength);//æ­¤å¤„ï¼ˆï¼‰é‡å®šä¹‰ï¼Œè¡¨ç¤ºè¿”å›å®æ—¶å…‰çº¿ä½ç½®
 
         Vec3f dPos{
             (sampler.nextFloat() - 0.5f) * aperture,

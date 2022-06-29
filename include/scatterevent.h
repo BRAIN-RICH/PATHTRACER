@@ -9,22 +9,22 @@ namespace scg
 
 // Information regarding an interaction with the scene
 // May not initialise all fields and update them during the process
-//É¢ÉäÊÂ¼ş
+//æ•£å°„äº‹ä»¶
 class ScatterEvent
 {
 public:
-    Vec3f position;//Î»ÖÃ
-    Vec3f normal;//Õı½»»¯
+    Vec3f position;//ä½ç½®
+    Vec3f normal;//æ­£äº¤åŒ–
     Vec2f uv;
 
-    Vec3f inputDir;//ÊäÈë·½Ïò
-    Vec3f outputDir;//Êä³ö·½Ïò
+    Vec3f inputDir;//è¾“å…¥æ–¹å‘
+    Vec3f outputDir;//è¾“å‡ºæ–¹å‘
 
-    float iorI;//¸÷ÏòÍ¬ĞÔisotropy
-    float iorO;//¸÷ÏòÒìĞÔanisotropy
+    float iorI;//å„å‘åŒæ€§isotropy
+    float iorO;//å„å‘å¼‚æ€§anisotropy
 
-    SurfaceType surfaceType;//±íÃæÀàĞÍ
-    BSDFLobe sampledLobe;//²ÉÑùÒ¶
+    SurfaceType surfaceType;//è¡¨é¢ç±»å‹
+    BSDFLobe sampledLobe;//é‡‡æ ·å¶
 
     ScatterEvent() = default;
 

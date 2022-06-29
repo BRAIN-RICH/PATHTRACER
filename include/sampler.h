@@ -9,8 +9,8 @@ namespace scg
 class Sampler
 {
 private:
-    std::default_random_engine generator;//Ëæ»úÊıÉú³ÉÆ÷
-    std::uniform_real_distribution<float> distribution;//ÓÃÓÚ¾ùÔÈ·Ö²¼ÖĞÉú³ÉËæ»ú¸¡µãÊı
+    std::default_random_engine generator;//éšæœºæ•°ç”Ÿæˆå™¨
+    std::uniform_real_distribution<float> distribution;//ç”¨äºå‡åŒ€åˆ†å¸ƒä¸­ç”Ÿæˆéšæœºæµ®ç‚¹æ•°
 
 public:
     Sampler()
@@ -20,12 +20,12 @@ public:
 
     float nextFloat()
     {
-        return distribution(generator);//·µ»ØÒÔgeneratorÎªÖÖ×ÓµÄËæ»úÊı
+        return distribution(generator);//è¿”å›ä»¥generatorä¸ºç§å­çš„éšæœºæ•°
     }
 
     unsigned int nextDiscrete(unsigned int range)
     {
-        return (unsigned int)/*std::floor*/(nextFloat() * range);//·µ»ØËæ»úÊı*ÊäÈë·¶Î§²ÎÊı
+        return (unsigned int)/*std::floor*/(nextFloat() * range);//è¿”å›éšæœºæ•°*è¾“å…¥èŒƒå›´å‚æ•°
     }
 };
 
