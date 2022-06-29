@@ -12,9 +12,9 @@ namespace scg
 
 Settings loadSettings();
 
-void loadSettingsFile(Settings &settings);
+void loadSettingsFile(Settings &settings,std::string filename);
 
-void loadBrain(Volume& volume, Volume& temp, Scene &scene, Settings &settings);
+void loadBrain(Volume& volume, Volume& temp, Scene &scene, Settings &settings,std::string filepath);
 
 void loadManix(Volume& volume, Volume& temp, Scene &scene, Settings &settings);
 

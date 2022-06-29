@@ -12,153 +12,130 @@
 
 #include <iostream>
 #include <cstdint>
-#include <cstring>//??????????????std????????????????c++?????????c???????
+#include <cstring>//ÉùÃ÷µÄÃû³ÆÊÇÔÚstd¿Õ¼äÖĞÃüÃûµÄ£¬¿ÉÔÚc++´úÂëÖĞÊ¹ÓÃc·ç¸ñµÄº¯Êı
 #include <memory>
-#include <omp.h>//openMP???ï¿½ï¿½??
+#include <omp.h>//openMP²¢ĞĞ±à³Ì
 #include <string>
+#include <fstream>
+#include "json.hpp"
+namespace js = nlohmann;
 
-
-#define RES 650//????????
+#define RES 650//¶¨Òå·Ö±æÂÊ
 #define SCREEN_WIDTH  RES
 #define SCREEN_HEIGHT RES
 
-#define FULLSCREEN_MODE false//???????
+#define FULLSCREEN_MODE false//¶¨ÒåÈ«ÆÁ
 
 #undef main // SDL2 compatibility with Windows
 
-// ????????
-bool Update(screen *screen);//??????
-void Draw(screen *screen);//???????
-void InitialiseBuffer();//?????????
-void saveScreenshot(screen *screen);//??????????
+// º¯ÊıÉùÃ÷
+bool Update(screen *screen,std::string settingFile);//ÊµÊ±¸üĞÂ
+void Draw(screen *screen);//»æÖÆ³ÌĞò
+void InitialiseBuffer();//³õÊ¼»¯»º´æ
+void saveScreenshot(screen *screen);//ÆÁÄ»½ØÍ¼±£´æ
 
 
-//???????? ???????????????
+//²ÉÑù·½·¨ Éú³ÉÒ»¸ö¶ÔÏóÊı×é
 scg::Sampler sampler[20]; // TODO: !!! find a better solution
 
 
-//???
+//Ïà»ú
 scg::Camera camera{
-    scg::Vec3f(0, 0, -240),//???ï¿½ï¿½??
-    scg::Vec3f(0, 0, 0),//?????????
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT,
-    true, // Jitter ????  ?????
-    0.2f, // Aperture ??????
-    3.0f}; // Focal length  ????
+        scg::Vec3f(0, 0, -240),//Ïà»úÎ»ÖÃ
+        scg::Vec3f(0, 0, 0),//Ïà»úĞı×ª½Ç¶È
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT,
+        true, // Jitter ¶¶¶¯  ¿¹¾â³İ
+        0.2f, // Aperture ¹âÈ¦¿×¾¶
+        3.0f}; // Focal length  ½¹¾à
 
 scg::Vec3f rotation{0, 0, 0};
 
 scg::Settings settings;
 scg::Scene scene;
 
-scg::Volume volume(VOLUME_SIZE, VOLUME_SIZE, VOLUME_SIZE);//??????????ï¿½ï¿½
-scg::Volume temp(VOLUME_SIZE, VOLUME_SIZE, VOLUME_SIZE);//?????????ï¿½ï¿½
+scg::Volume volume(VOLUME_SIZE, VOLUME_SIZE, VOLUME_SIZE);//´´½¨ÌåÊı¾İ´æ´¢
+scg::Volume temp(VOLUME_SIZE, VOLUME_SIZE, VOLUME_SIZE);//ÁÙÊ±ÌåÊı¾İ´æ´¢
 
-int samples;//????????
-scg::Vec3f buffer[SCREEN_HEIGHT][SCREEN_WIDTH];//???????
+int samples;//²ÉÑù´ÎÊı
+scg::Vec3f buffer[SCREEN_HEIGHT][SCREEN_WIDTH];//ÈıÎ¬ÏòÁ¿
 
-int main(int argc, char *argv[])
+int test(std::string configFilePath)
 {
-    InitialiseBuffer();//?????????
-
-    screen *screen = InitializeSDL(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN_MODE);//?????sdl
+    InitialiseBuffer();//³õÊ¼»¯»º´æ
+    std::ifstream configFile(configFilePath);
+    js::json config;
+    configFile >> config;
+    screen *screen = InitializeSDL(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN_MODE);//³õÊ¼»¯sdl
 
     // Initialise scene
-	settings = scg::loadSettings();
-    scg::loadSettingsFile(settings);//???????????
-    scene = scg::loadTestModel(150.0f);//??????ï¿½ï¿½?????
-    //scg::loadBrain(volume, temp, scene, settings);//???????????
-    //scg::loadManix(volume, temp, scene, settings);//????
+    settings = scg::loadSettings();
+    scg::loadSettingsFile(settings,config["transferfile"].get<std::string>());//¼ÓÔØÉèÖÃÎÄ¼ş
+    scene = scg::loadTestModel(150.0f);//¼ÓÔØ¿µÄÎ¶ûºĞ×Ó
+    scg::loadBrain(volume, temp, scene, settings,config["brainpath"].get<std::string>());//¼ÓÔØ´óÄÔÊı¾İ
+    //scg::loadManix(volume, temp, scene, settings);//¼ÓÔØ
     //scg::loadBunny(volume, temp, scene, settings);
 
-    // ???????????????
-    while (Update(screen))
+    // ¿ªÊ¼Ö÷ÒªµÄÑ­»·»æÖÆ
+    while (Update(screen,config["transferfile"].get<std::string>()))
     {
         Draw(screen);
         SDL_Renderframe(screen);
     }
 
-    // ?ï¿½ï¿½?????????
+    // ´æ´¢ºÍ½áÊø½ø³Ì
     //saveScreenshot(screen);
     KillSDL(screen);
 
     return 0;
 }
 
-void test()
-{
-    InitialiseBuffer();//åˆå§‹åŒ–ç¼“å­˜
-
-    screen *screen = InitializeSDL(SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN_MODE);//åˆå§‹åŒ–sdl
-
-    // Initialise scene
-	settings = scg::loadSettings();
-    scg::loadSettingsFile(settings);//åŠ è½½è®¾ç½®æ–‡ä»¶
-    scene = scg::loadTestModel(150.0f);//åŠ è½½åº·å¥ˆå°”ç›’å­
-    scg::loadBrain(volume, temp, scene, settings);//åŠ è½½å¤§è„‘æ•°æ®
-    //scg::loadManix(volume, temp, scene, settings);//åŠ è½½
-    //scg::loadBunny(volume, temp, scene, settings);
-
-    // å¼€å§‹ä¸»è¦çš„å¾ªç¯ç»˜åˆ¶
-    while (Update(screen))
-    {
-        Draw(screen);
-        SDL_Renderframe(screen);
-    }
-
-    // å­˜å‚¨å’Œç»“æŸè¿›ç¨‹
-    //saveScreenshot(screen);
-    KillSDL(screen);
-
-}
-
 void Draw(screen *screen)
 {
-    ++samples;//??????ï¿½ï¿½?+1
+    ++samples;//²ÉÑùÒ»´Î¾Í+1
 
     // TODO: reseed generator
-	//????????for????????for??????????????ï¿½ï¿½???????????????????
-    #pragma omp parallel for schedule(dynamic) shared(camera, scene, settings, screen)
-    for (int y = 0; y < SCREEN_HEIGHT; ++y)//y???????????
+    //´´½¨Ïß³Ì£¬for±íÊ¾ºóÃæµÄforÑ­»·½«±»¶àÏß³ÌÖ´ĞĞ£¬ÁíÃ¿´ÎÑ­»·Ö®¼ä²»ÄÜÓĞÁªÏµ
+#pragma omp parallel for schedule(dynamic) shared(camera, scene, settings, screen)
+    for (int y = 0; y < SCREEN_HEIGHT; ++y)//y·½ÏòÉÏµÄÏñËØ
     {
-        for (int x = 0; x < SCREEN_WIDTH; ++x)//x???????????
+        for (int x = 0; x < SCREEN_WIDTH; ++x)//x·½ÏòÉÏµÄÏñËØ
         {
-            scg::Ray ray = camera.getRay(x, y, sampler[omp_get_thread_num()]);//??????????
-            ray.minT = scg::RAY_EPS;//??????????
-            
-            ray.origin = scg::rotate(ray.origin, rotation);//???????
-            ray.direction = scg::rotate(ray.direction, rotation);//???????
+            scg::Ray ray = camera.getRay(x, y, sampler[omp_get_thread_num()]);//»ñÈ¡ÆğÊ¼¹âÏß
+            ray.minT = scg::RAY_EPS;//¹âÏßÆğÊ¼Ê±¼ä
 
-            scg::Vec3f colour = scg::trace(scene, ray, settings, sampler[omp_get_thread_num()]);//???ï¿½ï¿½???????????????
-			//???ï¿½ï¿½??????????????????,???1???????
+            ray.origin = scg::rotate(ray.origin, rotation);//Ğı×ª¹âÏß
+            ray.direction = scg::rotate(ray.direction, rotation);//¹âÏß·½Ïò
+
+            scg::Vec3f colour = scg::trace(scene, ray, settings, sampler[omp_get_thread_num()]);//Í¨¹ıÂ·¾¶×·×ÙÇóÈ¡×îÖÕÑÕÉ«
+            //»º´æ¾­¹ıÙ¤Âí½ÃÕıµÄÏñËØÑÕÉ«,Ä¿Ç°Îª1£¬´ıĞŞ¸Ä
             buffer[y][x] += colour * settings.gamma; // TODO: clamp value
 
-			//???????????????
+            //½«ÑÕÉ«ÏÔÊ¾µ½ÆÁÄ»ÉÏ
             PutPixelSDL(screen, x, y, buffer[y][x] / samples);
         }
     }
 }
 
-bool Update(screen *screen)
+bool Update(screen *screen,std::string settingFile)
 {
-    static int t = SDL_GetTicks();//?????SDL???????????????????????ï¿½ï¿½????????unsigned 32-bit????
-    /* ???????????? */
-    int t2 = SDL_GetTicks();//????????????
+    static int t = SDL_GetTicks();//»ñÈ¡´ÓSDL¿â³õÊ¼»¯À´Ëù¾­Àú¹ıµÄÊ±¼ä£¬µ¥Î»ÎªÎ¢Ãë¡£·µ»Øunsigned 32-bitÀàĞÍ
+    /* ¼ÆËãäÖÈ¾Ò»Ö¡Ê±¼ä */
+    int t2 = SDL_GetTicks();//äÖÈ¾ÍêÒ»Ö¡µÄÊ±¼ä
     float dt = float(t2 - t);
-    t = t2;//???????????????
+    t = t2;//ÆğÊ¼Ê±¼äÉèÖÃÎªÏÂÒ»Ö¡
     /*Good idea to remove this*/
     std::cout << "Iteration: " << samples << ". Render time: " << dt << " ms." << std::endl;
 
-    SDL_Event e;//???????SDLevent????
-    while (SDL_PollEvent(&e))//??????
+    SDL_Event e;//ÉùÃ÷Ò»¸öSDLevent±äÁ¿
+    while (SDL_PollEvent(&e))//¶ÁÈ¡ÊÂ¼ş
     {
-       if (e.type == SDL_QUIT)//????????????????????????SDL_QUIT???????????SDL??????
+        if (e.type == SDL_QUIT)//²é¿´ÊÂ¼şÀàĞÍ£¬Èç¹ûÓÃ»§µã»÷ÁË¹Ø±Õ¡£SDL_QUITÓÃÀ´Çå¿ÕËùÓĞSDLÕ¼ÓÃ×ÊÔ´
         {
             return false;
-        } else if (e.type == SDL_KEYDOWN)//????????????????????????????????
+        } else if (e.type == SDL_KEYDOWN)//ÊÂ¼şÀàĞÍÈôÎª¼üÅÌÊÂ¼ş£¬Èç¹ûÓÃ»§°´ÏÂ¼üÅÌ
         {
-            int key_code = e.key.keysym.sym;//???????????????surface
+            int key_code = e.key.keysym.sym;//¸ù¾İÏàÓ¦µÄ°´¼üÑ¡Ôñsurface
             switch (key_code)
             {
                 case SDLK_0:
@@ -173,37 +150,37 @@ bool Update(screen *screen)
                     settings.renderType = 2;
                     InitialiseBuffer();
                     break;
-                case SDLK_ESCAPE://ESC???
+                case SDLK_ESCAPE://ESCÍË³ö
                     /* Move camera quit */
                     return false;
-                case SDLK_w://??????
+                case SDLK_w://Ïà»úÇ°ÒÆ
                     /* Move camera forward */
                     camera.position.z += 3.0f;
                     InitialiseBuffer();
                     break;
-                case SDLK_s://???????
+                case SDLK_s://Ïà»úºóÒÆ
                     /* Move camera backwards */
                     camera.position.z -= 3.0f;
                     InitialiseBuffer();
                     break;
-                case SDLK_a://???????
+                case SDLK_a://Ïà»ú×óÒÆ
                     /* Move camera left */
                     camera.position.x -= 3.0f;
                     InitialiseBuffer();
                     break;
-                case SDLK_d://???????
+                case SDLK_d://Ïà»úÓÒÒÆ
                     /* Move camera right */
                     camera.position.x += 3.0f;
                     InitialiseBuffer();
                     break;
-                case SDLK_r://???????????
+                case SDLK_r://¼ÓÔØÉèÖÃÎÄ¼ş
                     InitialiseBuffer();
-                    scg::loadSettingsFile(settings);
+                    scg::loadSettingsFile(settings,settingFile);
                     break;
-                case SDLK_p://???
+                case SDLK_p://½ØÍ¼
                     saveScreenshot(screen);
                     break;
-                case SDLK_UP://???????
+                case SDLK_UP://ÏòÉÏĞı×ª
                     rotation.x -= 5;
                     if (rotation.x < 0)
                         rotation.x += 360;
@@ -236,13 +213,13 @@ bool Update(screen *screen)
 void InitialiseBuffer()
 {
     samples = 0;
-    memset(buffer, 0, sizeof(buffer));//??????????????????0
+    memset(buffer, 0, sizeof(buffer));//³õÊ¼»¯»º´æÇø£¬ÉèÖÃÎª0
 }
 
 void saveScreenshot(screen *screen)
 {
     std::string fileName = "screenshot" + std::to_string(samples) + ".bmp";
-    SDL_SaveImage(screen, fileName.c_str());//c_str??string??char??????
+    SDL_SaveImage(screen, fileName.c_str());//c_str°Ñstring×ªÎªchar£¬±£´æ
 }
 
 
@@ -251,138 +228,137 @@ void saveScreenshot(screen *screen)
 namespace py = pybind11;
 
 
-PYBIND11_MODULE(raytracer, m) 
-{	
-	
-	//?????
-	py::class_<screen>(m, "screen")
-		.def(py::init<>())
-		.def_readwrite("height", &screen::height)
-		.def_readwrite("buffer", &screen::buffer)
-		.def_readwrite("width", &screen::width);
-		//.def_readwrite("renderer", &screen::renderer)
-		//.def_readwrite("texture", &screen::texture)
-		//.def_readwrite("window", &screen::window);
+PYBIND11_MODULE(raytracer, m)
+{
 
-	//???????
-	m.attr("RES") = 650;
-	m.attr("FULLSCREEN_MODE") = false;
-	m.attr("SCREEN_WIDTH") = RES;//?????????????python?????
-	m.attr("SCREEN_HEIGHT") = RES;
-	m.attr("samples") = 0;
+    //ÆÁÄ»Àà
+    py::class_<screen>(m, "screen")
+            .def(py::init<>())
+            .def_readwrite("height", &screen::height)
+            .def_readwrite("buffer", &screen::buffer)
+            .def_readwrite("width", &screen::width);
+    //.def_readwrite("renderer", &screen::renderer)
+    //.def_readwrite("texture", &screen::texture)
+    //.def_readwrite("window", &screen::window);
 
-
-	m.def("InitialiseBuffer", &InitialiseBuffer);
-	m.def("loadSettings", &scg::loadSettings);
-	m.def("loadSettingsFile", &scg::loadSettingsFile);
+    //±äÁ¿¸³Öµ
+    m.attr("RES") = 650;
+    m.attr("FULLSCREEN_MODE") = false;
+    m.attr("SCREEN_WIDTH") = RES;//±ØĞëÒª¸³Öµ²Å»áÔÚpythonÖĞÏÔÊ¾
+    m.attr("SCREEN_HEIGHT") = RES;
+    m.attr("samples") = 0;
 
 
-	//?????????????
-	py::class_<scg::Vec2f>(m, "Vec2f");
-	py::class_<scg::Vec2i>(m, "Vec2i");
-	py::class_<scg::Vec3f>(m, "Vec3f");
-	py::class_<scg::Vec4f>(m, "Vec4f");
-
-	//??????
-	py::class_<scg::Camera>(m, "Camera")
-		.def(py::init<>())
-		.def_readwrite("position", &scg::Camera::position)
-		.def_readwrite("rotation", &scg::Camera::rotation)
-		.def_readwrite("antialiasing", &scg::Camera::antialiasing)
-		.def_readwrite("aperture", &scg::Camera::aperture)
-		.def_readwrite("height", &scg::Camera::height)
-		.def_readwrite("width", &scg::Camera::width)
-		.def_readwrite("focalLength", &scg::Camera::focalLength)
-		.def("getRay", &scg::Camera::getRay)
-		.def("getLensRay", &scg::Camera::getLensRay);
+    m.def("InitialiseBuffer", &InitialiseBuffer);
+    m.def("loadSettings", &scg::loadSettings);
+    m.def("loadSettingsFile", &scg::loadSettingsFile);
 
 
-	//???????
-	py::class_<scg::Sampler>(m, "Sampler")
-		.def(py::init<>())
-		.def("nextFloat", &scg::Sampler::nextFloat)
-		.def("nextDiscrete", &scg::Sampler::nextDiscrete);
+    //ÏòÁ¿Ä£°åÀà£¬´ı°ó¶¨
+    py::class_<scg::Vec2f>(m, "Vec2f");
+    py::class_<scg::Vec2i>(m, "Vec2i");
+    py::class_<scg::Vec3f>(m, "Vec3f");
+    py::class_<scg::Vec4f>(m, "Vec4f");
+
+    //Ïà»úÀà°ó¶¨
+    py::class_<scg::Camera>(m, "Camera")
+            .def(py::init<>())
+            .def_readwrite("position", &scg::Camera::position)
+            .def_readwrite("rotation", &scg::Camera::rotation)
+            .def_readwrite("antialiasing", &scg::Camera::antialiasing)
+            .def_readwrite("aperture", &scg::Camera::aperture)
+            .def_readwrite("height", &scg::Camera::height)
+            .def_readwrite("width", &scg::Camera::width)
+            .def_readwrite("focalLength", &scg::Camera::focalLength)
+            .def("getRay", &scg::Camera::getRay)
+            .def("getLensRay", &scg::Camera::getLensRay);
 
 
-	////???????  ??????????
-	py::class_<scg::Ray>(m, "Ray")
-		.def(py::init<>())
-		.def(py::init<const scg::Vec3f&, const scg::Vec3f&, float, float>())
-		.def_readwrite("direction", &scg::Ray::direction)
-		.def_readwrite("maxT", &scg::Ray::maxT)
-		.def_readwrite("minT", &scg::Ray::minT)
-		.def_readwrite("origin", &scg::Ray::origin);
-		//.def_readwrite("operator", &scg::Ray::operator());//???????????????????????
-		//.def_readwrite("isInside", &scg::Ray::isInside)//?????????????ï¿½ï¿½??????????
+    //²ÉÑùÀà°ó¶¨
+    py::class_<scg::Sampler>(m, "Sampler")
+            .def(py::init<>())
+            .def("nextFloat", &scg::Sampler::nextFloat)
+            .def("nextDiscrete", &scg::Sampler::nextDiscrete);
 
 
-
-	py::class_<scg::Light>(m, "Light")
-		//.def(py::init<const scg::Vec3f&,float>())
-		.def("getEmittance", &scg::Light::getEmittance)
-		.def("getIntensity", &scg::Light::getIntensity)
-		.def("getType", &scg::Light::getType)
-		.def("illuminate", &scg::Light::illuminate);
-
-	
-	//??????? 
-	py::class_<scg::Scene>(m, "Scene")
-		.def_readwrite("volume", &scg::Scene::volume)
-		.def_readwrite("lights", &scg::Scene::lights)
-		.def_readwrite("materials", &scg::Scene::materials)
-		.def_readwrite("objects", &scg::Scene::objects)
-		.def_readwrite("volumePos", &scg::Scene::volumePos);
-
-	////???????  ??????????
-	py::class_<scg::Volume>(m, "Volume")
-		.def(py::init<int, int, int>())
-		.def_readwrite("height", &scg::Volume::height)
-		.def_readwrite("width", &scg::Volume::width)
-		.def_readwrite("depth", &scg::Volume::depth)
-		.def_readwrite("octree", &scg::Volume::octree);
-		//.def_readwrite("data", &scg::Volume::data);//????  ?????????????????????
-		//.def("sampleVolume", &scg::Volume::sampleVolume)
-		//.def("getGradient", &scg::Volume::getGradient)
-		//.def("getGradientNormalised", &scg::Volume::getGradientNormalised);
-
-	////????????
-	py::class_<scg::Settings>(m, "Settings")
-		.def(py::init<>())
-		.def_readwrite("backgroundLight", &scg::Settings::backgroundLight)
-		.def_readwrite("bb", &scg::Settings::bb)
-		.def_readwrite("brackets", &scg::Settings::brackets)
-		.def_readwrite("densityScale", &scg::Settings::densityScale)
-		.def_readwrite("gamma", &scg::Settings::gamma)
-		.def_readwrite("gradientFactor", &scg::Settings::gradientFactor)
-		.def_readwrite("mask", &scg::Settings::mask)
-		.def_readwrite("maxDepth", &scg::Settings::maxDepth)
-		.def_readwrite("maxOpacity", &scg::Settings::maxOpacity)
-		.def_readwrite("minDepth", &scg::Settings::minDepth)
-		.def_readwrite("minStepSize", &scg::Settings::minStepSize)
-		.def_readwrite("octreeLevels", &scg::Settings::octreeLevels)
-		.def_readwrite("renderType", &scg::Settings::renderType)
-		.def_readwrite("stepSize", &scg::Settings::stepSize)
-		.def_readwrite("transferFunction", &scg::Settings::transferFunction)
-		.def_readwrite("useBox", &scg::Settings::useBox);
-
-
-	
-	m.def("Draw", &Draw);
-	m.def("loadTestModel", &scg::loadTestModel);
-
-
-	//?????python???????
-	m.def("Update", &Update);//?????ï¿½ï¿½
-	m.def("saveScreenshot", &saveScreenshot);
-	m.def("SDL_Renderframe", &SDL_Renderframe);
-	m.def("KillSDL", &KillSDL);
-	m.def("InitializeSDL", &InitializeSDL);
+    ////¹âÏßÀà°ó¶¨  ÓĞÎÊÌâ£¡£¡£¡
+    py::class_<scg::Ray>(m, "Ray")
+            .def(py::init<>())
+            .def(py::init<const scg::Vec3f&, const scg::Vec3f&, float, float>())
+            .def_readwrite("direction", &scg::Ray::direction)
+            .def_readwrite("maxT", &scg::Ray::maxT)
+            .def_readwrite("minT", &scg::Ray::minT)
+            .def_readwrite("origin", &scg::Ray::origin);
+    //.def_readwrite("operator", &scg::Ray::operator());//±¨´í£¬±àÒëÆ÷·¢ÉúÄÚ²¿´íÎó
+    //.def_readwrite("isInside", &scg::Ray::isInside)//±¨´í£¬±àÒëÆ÷ÖĞ·¢ÉúÄÚ²¿´íÎó
 
 
 
-	m.def("loadBrain", &scg::loadBrain);
-	m.def("loadBunny", &scg::loadBunny);
-	m.def("loadManix", &scg::loadManix);
+    py::class_<scg::Light>(m, "Light")
+            //.def(py::init<const scg::Vec3f&,float>())
+            .def("getEmittance", &scg::Light::getEmittance)
+            .def("getIntensity", &scg::Light::getIntensity)
+            .def("getType", &scg::Light::getType)
+            .def("illuminate", &scg::Light::illuminate);
+
+
+    //³¡¾°Àà°ó¶¨
+    py::class_<scg::Scene>(m, "Scene")
+            .def_readwrite("volume", &scg::Scene::volume)
+            .def_readwrite("lights", &scg::Scene::lights)
+            .def_readwrite("materials", &scg::Scene::materials)
+            .def_readwrite("objects", &scg::Scene::objects)
+            .def_readwrite("volumePos", &scg::Scene::volumePos);
+
+    ////°ó¶¨Ìå»ıÀà  ÓĞÎÊÌâ£¡£¡£¡
+    py::class_<scg::Volume>(m, "Volume")
+            .def(py::init<int, int, int>())
+            .def_readwrite("height", &scg::Volume::height)
+            .def_readwrite("width", &scg::Volume::width)
+            .def_readwrite("depth", &scg::Volume::depth)
+            .def_readwrite("octree", &scg::Volume::octree);
+    //.def_readwrite("data", &scg::Volume::data);//±¨´í  £¡£¡£¡²»¿ÉÖ¸¶¨Êı×éÀàĞÍ
+    //.def("sampleVolume", &scg::Volume::sampleVolume)
+    //.def("getGradient", &scg::Volume::getGradient)
+    //.def("getGradientNormalised", &scg::Volume::getGradientNormalised);
+
+    ////°ó¶¨ÉèÖÃÀà
+    py::class_<scg::Settings>(m, "Settings")
+            .def(py::init<>())
+            .def_readwrite("backgroundLight", &scg::Settings::backgroundLight)
+            .def_readwrite("bb", &scg::Settings::bb)
+            .def_readwrite("brackets", &scg::Settings::brackets)
+            .def_readwrite("densityScale", &scg::Settings::densityScale)
+            .def_readwrite("gamma", &scg::Settings::gamma)
+            .def_readwrite("gradientFactor", &scg::Settings::gradientFactor)
+            .def_readwrite("mask", &scg::Settings::mask)
+            .def_readwrite("maxDepth", &scg::Settings::maxDepth)
+            .def_readwrite("maxOpacity", &scg::Settings::maxOpacity)
+            .def_readwrite("minDepth", &scg::Settings::minDepth)
+            .def_readwrite("minStepSize", &scg::Settings::minStepSize)
+            .def_readwrite("octreeLevels", &scg::Settings::octreeLevels)
+            .def_readwrite("renderType", &scg::Settings::renderType)
+            .def_readwrite("stepSize", &scg::Settings::stepSize)
+            .def_readwrite("transferFunction", &scg::Settings::transferFunction)
+            .def_readwrite("useBox", &scg::Settings::useBox);
+
+
+
+    m.def("Draw", &Draw);
+    m.def("loadTestModel", &scg::loadTestModel);
+
+
+    //Éú³Éºópython»á³öÎÊÌâ
+    m.def("Update", &Update);//¿É×Ô¼ºĞ´
+    m.def("saveScreenshot", &saveScreenshot);
+    m.def("SDL_Renderframe", &SDL_Renderframe);
+    m.def("KillSDL", &KillSDL);
+    m.def("InitializeSDL", &InitializeSDL);
+
+
+
+    m.def("loadBrain", &scg::loadBrain);
+    m.def("loadBunny", &scg::loadBunny);
+    m.def("loadManix", &scg::loadManix);
     m.def("test",&test);
-
 }
