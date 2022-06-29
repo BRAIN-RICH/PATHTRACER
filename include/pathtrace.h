@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_PATHTRACE_H
+﻿#ifndef RAYTRACER_PATHTRACE_H
 #define RAYTRACER_PATHTRACE_H
 
 #include "ray.h"

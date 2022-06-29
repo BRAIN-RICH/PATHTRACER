@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_MATH_VECTOR_UTILS_H
+﻿#ifndef RAYTRACER_MATH_VECTOR_UTILS_H
 #define RAYTRACER_MATH_VECTOR_UTILS_H
 
 #include "sampler.h"

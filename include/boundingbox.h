@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_BOUNDINGBOX_H
+﻿#ifndef RAYTRACER_BOUNDINGBOX_H
 #define RAYTRACER_BOUNDINGBOX_H
 
 #include "ray.h"

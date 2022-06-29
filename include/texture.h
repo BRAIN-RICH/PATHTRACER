@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_TEXTURE_H
+﻿#ifndef RAYTRACER_TEXTURE_H
 #define RAYTRACER_TEXTURE_H
 
 #include "vector_type.h"

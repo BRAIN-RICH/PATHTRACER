@@ -1,4 +1,4 @@
-#include "sdl_wrapper.h"
+﻿#include "sdl_wrapper.h"
 //texture
 SDLTextureWrapper::SDLTextureWrapper(SDL_Texture* tex) : tex_(tex) {}
 

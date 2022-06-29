@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_RAYMARCH_H
+﻿#ifndef RAYTRACER_RAYMARCH_H
 #define RAYTRACER_RAYMARCH_H
 
 #include "intersection.h"

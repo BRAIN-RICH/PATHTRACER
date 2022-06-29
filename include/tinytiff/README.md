@@ -1,4 +1,4 @@
-# TinyTIFF
+﻿# TinyTIFF
 
 (c) 2014-2015 by Jan W. Krieger                                                 --
 

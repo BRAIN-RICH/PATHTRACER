@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_SETTINGS_H
+﻿#ifndef RAYTRACER_SETTINGS_H
 #define RAYTRACER_SETTINGS_H
 
 #include "transferfunction.h"

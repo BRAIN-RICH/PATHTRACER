@@ -1,4 +1,4 @@
-build文件夹：pathtracer项目文件，需逐步调试生成byd文件
+﻿build文件夹：pathtracer项目文件，需逐步调试生成byd文件
 include文件夹：pathtracer所需包含目录
 PT_bybind文件夹：可作为父项目，多次cmake生成不同的项目。
 pybind_test:测试pybind11绑定算法用

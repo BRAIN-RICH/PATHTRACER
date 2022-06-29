@@ -1,20 +1,20 @@
-#ifndef RAYTRACER_ENUMS_H
+ï»¿#ifndef RAYTRACER_ENUMS_H
 #define RAYTRACER_ENUMS_H
 
-//Ã¶¾Ù±íÃæÀàĞÍ
+//æšä¸¾è¡¨é¢ç±»å‹
 enum SurfaceType
 {
     Surface = 0,
-    Volume = (1 << 0)//°Ñ1°´2½øÖÆ×óÒÆÒ»Î»
+    Volume = (1 << 0)//æŠŠ1æŒ‰2è¿›åˆ¶å·¦ç§»ä¸€ä½
 };
 
 enum BSDFLobe
 {
     Null = 0,
-    Diffuse = (1 << 0),//Âş·´Éä
-    SpecularReflection = (1 << 1),//¾µÃæ·´Éä
-    SpecularTransmission = (1 << 2),//¾µÃæ´«Êä
-    Specular = SpecularReflection | SpecularTransmission//¶şÑ¡Ò»
+    Diffuse = (1 << 0),//æ¼«åå°„
+    SpecularReflection = (1 << 1),//é•œé¢åå°„
+    SpecularTransmission = (1 << 2),//é•œé¢ä¼ è¾“
+    Specular = SpecularReflection | SpecularTransmission//äºŒé€‰ä¸€
 };
 
 #endif //RAYTRACER_ENUMS_H

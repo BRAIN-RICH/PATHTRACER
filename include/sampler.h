@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_SAMPLER_H
+﻿#ifndef RAYTRACER_SAMPLER_H
 #define RAYTRACER_SAMPLER_H
 
 #include <random>

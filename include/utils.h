@@ -1,4 +1,4 @@
-#ifndef COMS30115_UTILITY_H
+﻿#ifndef COMS30115_UTILITY_H
 #define COMS30115_UTILITY_H
 
 #include "settings.h"

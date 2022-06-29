@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+﻿cmake_minimum_required(VERSION 3.10)
 #设置项目名称
 project(raytracer VERSION 0.1)
 #添加子模块pybind11

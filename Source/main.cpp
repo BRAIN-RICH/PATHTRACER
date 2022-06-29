@@ -1,4 +1,4 @@
-#include "camera.h"
+﻿#include "camera.h"
 #include "pathtrace.h"
 #include "ray.h"
 #include "sampler.h"

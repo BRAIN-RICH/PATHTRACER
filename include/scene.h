@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_SCENE_H
+﻿#ifndef RAYTRACER_SCENE_H
 #define RAYTRACER_SCENE_H
 
 #include "light.h"

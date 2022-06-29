@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_VECTORS_H
+﻿#ifndef RAYTRACER_VECTORS_H
 #define RAYTRACER_VECTORS_H
 
 #include "math_utils.h"

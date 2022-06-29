@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_MATERIAL_H
+﻿#ifndef RAYTRACER_MATERIAL_H
 #define RAYTRACER_MATERIAL_H
 
 #include "enums.h"

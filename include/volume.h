@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_VOLUME_H
+﻿#ifndef RAYTRACER_VOLUME_H
 #define RAYTRACER_VOLUME_H
 
 #include "octree.h"

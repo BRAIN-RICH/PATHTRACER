@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_INTERACTION_H
+﻿#ifndef RAYTRACER_INTERACTION_H
 #define RAYTRACER_INTERACTION_H
 
 #include "enums.h"

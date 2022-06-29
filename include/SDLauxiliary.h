@@ -1,4 +1,4 @@
-#ifndef SDL_AUXILIARY_H
+﻿#ifndef SDL_AUXILIARY_H
 #define SDL_AUXILIARY_H
 
 #include "math_utils.h"

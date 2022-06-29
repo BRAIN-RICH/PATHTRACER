@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_CAMERA_H
+﻿#ifndef RAYTRACER_CAMERA_H
 #define RAYTRACER_CAMERA_H
 
 #include "sampler.h"

@@ -1,4 +1,4 @@
-#ifndef RAYTRACER_OBJECT_H
+﻿#ifndef RAYTRACER_OBJECT_H
 #define RAYTRACER_OBJECT_H
 
 #include "boundingbox.h"

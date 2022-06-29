@@ -1,4 +1,4 @@
-#include "utils.h"
+﻿#include "utils.h"
 
 #include "geometry.h"
 #include "material.h"
@@ -215,7 +215,7 @@ void loadBrain(scg::Volume& volume, scg::Volume& temp, Scene &scene, scg::Settin
     std::vector<std::string > _file;
     for (auto &&fe:fs::directory_iterator(filepath))
     {
-        _file.push_back(fe.path());
+        _file.push_back(fe.path().string());
     }
     std::sort(_file.begin(),_file.end());
     for (int x = 0; x < _file.size(); ++x)

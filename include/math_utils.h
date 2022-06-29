@@ -1,9 +1,9 @@
-#ifndef RAYTRACER_MATH_UTILS_H
+﻿#ifndef RAYTRACER_MATH_UTILS_H
 #define RAYTRACER_MATH_UTILS_H
 
 #include <cmath>
 #include<limits>
-//#include<corecrt_math_defines.h>
+#include<corecrt_math_defines.h>
 namespace scg
 {
 

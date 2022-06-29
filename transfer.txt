@@ -1,4 +1,4 @@
-densityScale 100
+﻿densityScale 100
 gradientFactor 7.5
 stepSize 0.2
 minDepth 5
