@@ -14,7 +14,8 @@
 #include <fstream>
 #include <map>
 #include <vector>
-
+#include <filesystem>
+namespace fs = std::filesystem;
 namespace scg
 {
 
@@ -74,10 +75,10 @@ std::shared_ptr<Material> parseMaterial(std::ifstream &fin, std::shared_ptr<Text
 }
 
 //加载文件
-void loadSettingsFile(Settings &settings)
+void loadSettingsFile(Settings &settings,std::string filename)
 {
     std::ifstream fin;
-    fin.open("D:/pathtracer/transfer.txt");
+    fin.open(filename);
 
     std::string type;
     std::map<std::string, std::shared_ptr<Material>> materials;
@@ -200,12 +201,24 @@ void loadSettingsFile(Settings &settings)
 }
 
 //加载数据
-void loadBrain(scg::Volume& volume, scg::Volume& temp, Scene &scene, scg::Settings &settings)
+void loadBrain(scg::Volume& volume, scg::Volume& temp, Scene &scene, scg::Settings &settings,std::string filepath)
 {
-    char filename[54] = "D:/pathtracer/data/StanfordBrain/mrbrain-16bit000.tif";
-    for (int x = 0; x < 99; ++x)
+    //char filename[54] = "D:/pathtracer/data/StanfordBrain/mrbrain-16bit000.tif";
+    fs::path &&_path(filepath);
+    if(!fs::exists(_path)||!fs::is_directory(_path))
     {
-        sprintf(filename + 46, "%03d.tif", x + 1);
+        std::cout << "need a path!" << std::endl;
+    }
+    std::vector<std::string> _file;
+    for (auto &&fe:fs::directory_iterator(_path))
+    {
+        _file.push_back(fe.path().string());
+    }
+    std::sort(_file.begin(),_file.end());
+    for (int x = 0; x < _file.size(); ++x)
+    {
+        //sprintf(filename + 46, "%03d.tif", x + 1);
+        const char *filename = _file[x].c_str();
         std::cout << "Loading: " << filename << std::endl;
 
         TinyTIFFReaderFile* tiffr = TinyTIFFReader_open(filename);
